@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PointsLivesScript : MonoBehaviour
 {
@@ -15,6 +16,12 @@ public class PointsLivesScript : MonoBehaviour
 
     [SerializeField] private GameObject winCanvas;
     [SerializeField] private GameObject loseCanvas;
+
+    [SerializeField] private TextMeshProUGUI winPointsText;
+    [SerializeField] private TextMeshProUGUI losePointsText;
+
+    [SerializeField] private Transform bricks;
+    private float bricksAmount;
 
     private void Awake()
     {
@@ -33,6 +40,11 @@ public class PointsLivesScript : MonoBehaviour
         currentScore = 0;
 
         livesText.text = currentLives.ToString("00");
+
+        winCanvas.SetActive(false);
+        loseCanvas.SetActive(false);
+
+        bricksAmount = bricks.childCount;
     }
 
     public void UpdateScore(int pointsToAdd)
@@ -54,6 +66,23 @@ public class PointsLivesScript : MonoBehaviour
 
     private void LoseGame()
     {
+        losePointsText.text = currentScore.ToString();
         loseCanvas.SetActive(true);
+    }
+
+    public void CheckBricks()
+    {
+        bricksAmount--;
+
+        if (bricksAmount <= 0)
+        {
+            winPointsText.text = currentScore.ToString();
+            winCanvas.SetActive(true);
+        }
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene("SampleScene");
     }
 }

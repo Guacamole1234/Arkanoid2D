@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.Build;
 using UnityEngine;
 
 public class BricksScript : MonoBehaviour
@@ -18,6 +17,8 @@ public class BricksScript : MonoBehaviour
             if (brickLives <= 0)
             {
                 PointsLivesScript.instance.UpdateScore(brickPoints);
+                PointsLivesScript.instance.CheckBricks();
+                PlayerScript.instance.PowerUpSpawn(transform.position);
                 Destroy(gameObject);
             }
         }

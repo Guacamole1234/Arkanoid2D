@@ -8,12 +8,20 @@ public class PlayerScript : MonoBehaviour
 
     [SerializeField] private float playerSpeed;
 
-    [SerializeField] float leftLimit;
-    [SerializeField] float rightLimit;
+    [SerializeField] private float leftLimit;
+    [SerializeField] private float rightLimit;
+
+    [SerializeField] private float invertedPowerupDuration;
+
     public bool gameStart;
 
     public bool powerUpInverted;
-    float playerDirection;
+    private float playerDirection;
+
+    [SerializeField] private float minimumChance;
+    [SerializeField] private float maximumChance;
+
+    [SerializeField] private GameObject invertedPUPrefab;
 
     void Awake()
     {
@@ -53,16 +61,26 @@ public class PlayerScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.name.Contains("Slow"))
+        if (collision.gameObject.CompareTag("PowerUpI"))
         {
             Destroy(collision.gameObject);
-            //PowerUpsBehaviour.instance.CallSlowBall();
+            StartCoroutine(InvertedPlayer());
         }
+    }
 
-        if (collision.gameObject.name.Contains("Inverted"))
+    private IEnumerator InvertedPlayer()
+    {
+        powerUpInverted = true;
+        yield return new WaitForSeconds(invertedPowerupDuration);
+        powerUpInverted = false;
+        yield return null;
+    }
+
+    public void PowerUpSpawn(Vector3 spawnPUPos)
+    {
+        if (Random.Range(0f, 1f) <= Random.Range(minimumChance, maximumChance))
         {
-            Destroy(collision.gameObject);
-            //PowerUpsBehaviour.instance.CallInvertedCroc();
+            Instantiate(invertedPUPrefab, spawnPUPos, Quaternion.identity);
         }
     }
 }
